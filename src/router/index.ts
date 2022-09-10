@@ -1,6 +1,8 @@
 import SignInVue from '@/pages/Auth/SignIn.vue';
 import SignUpVue from '@/pages/Auth/SignUp.vue';
 import HomeVue from '@/pages/Home.vue';
+import GenericServiceLayoutVue from '@/pages/Services/GenericServiceLayout.vue';
+import TransactionsServiceVue from '@/pages/Services/TransactionsService.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 
@@ -18,9 +20,13 @@ const router = createRouter({
       component: SignUpVue,
     },
     {
-      path: '/home',
+      path: '/Home',
       name: 'Home',
       component: HomeVue,
+    },
+    {
+      path: '/Home/Transactions',
+      component: TransactionsServiceVue,
     },
     {
       path: '/about',
