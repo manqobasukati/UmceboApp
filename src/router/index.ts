@@ -1,5 +1,6 @@
 import SignInVue from '@/pages/Auth/SignIn.vue';
 import SignUpVue from '@/pages/Auth/SignUp.vue';
+import HomeVue from '@/pages/Home.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 
@@ -15,6 +16,11 @@ const router = createRouter({
       path: '/auth/sign-up',
       name: 'AuthSignUp',
       component: SignUpVue,
+    },
+    {
+      path: '/home',
+      name: 'Home',
+      component: HomeVue,
     },
     {
       path: '/about',
