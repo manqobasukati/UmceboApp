@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center justify-between gap-2">
+  <div class="flex flex-col items-center justify-between gap-2 p-2">
     <span class="material-icons-outlined">{{ icon }}</span>
     <div class="text-sm">{{ detail }}</div>
   </div>

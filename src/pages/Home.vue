@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="h-3/4 w-full p-4">
-      <div class="grid grid-cols-3 justify-center gap-6">
+      <div class="grid grid-cols-3 justify-center">
         <icon-detail-vertical
           v-for="(service, key) in currentUserServices"
           :key="key"
