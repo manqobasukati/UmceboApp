@@ -18,6 +18,7 @@
           :spaceBetween="'gap'"
           :iconSize="'icon-md'"
           color="text-success"
+          @click="showAddTransactionDialog()"
         />
       </div>
       <div class="w-full">
@@ -34,6 +35,7 @@
 
       <div class="flex w-full flex-col gap-2">
         <div
+          @click="showEditTransactionDialog()"
           class="flex gap-1 items-center w-full justify-between border border-purple-100 rounded-sm p-2"
         >
           <icon-detail-vertical :icon="'attach_money'" :iconSize="'icon-sm'" />
@@ -55,15 +57,29 @@
         </div>
       </div>
     </div>
+    <dialog-box
+      @close-dialog-box="showAddTransactionDialog"
+      :showDialogBox="showDialogBox"
+    >
+      <add-transaction
+        v-if="activeDialogView === 'AddTransaction'"
+      ></add-transaction>
+      <edit-delete-transaction
+        v-if="activeDialogView === 'EditTransaction'"
+      ></edit-delete-transaction>
+    </dialog-box>
   </generic-service-layout>
 </template>
 
 <script lang="ts">
+import DialogBox from '@/components/ui/DialogBox.vue';
 import HeadlineValue from '@/components/ui/HeadlineValue.vue';
 import IconDetailVertical from '@/components/ui/IconDetailVertical.vue';
 import PillTab from '@/components/ui/PillTab.vue';
 import { defineComponent, ref } from 'vue';
 import GenericServiceLayout from './GenericServiceLayout.vue';
+import AddTransaction from './TransactionService/AddTransaction.vue';
+import EditDeleteTransaction from './TransactionService/EditDeleteTransaction.vue';
 
 export default defineComponent({
   components: {
@@ -71,15 +87,36 @@ export default defineComponent({
     HeadlineValue,
     IconDetailVertical,
     PillTab,
+    DialogBox,
+    AddTransaction,
+    EditDeleteTransaction,
   },
   setup() {
     console.log('TransactionsService');
     const pills = ref(['Expenses', 'Income']);
     const activePill = ref('Income');
 
+    const activeDialogView = ref('');
+
+    const showDialogBox = ref(false);
+
+    const showAddTransactionDialog = () => {
+      showDialogBox.value = !showDialogBox.value;
+      activeDialogView.value = 'AddTransaction';
+    };
+
+    const showEditTransactionDialog = () => {
+      showDialogBox.value = !showDialogBox.value;
+      activeDialogView.value = 'EditTransaction';
+    };
+
     return {
       pills,
       activePill,
+      showAddTransactionDialog,
+      showDialogBox,
+      activeDialogView,
+      showEditTransactionDialog,
     };
   },
 });

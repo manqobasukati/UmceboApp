@@ -10,6 +10,10 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: '/',
+      redirect: '/Home',
+    },
+    {
       path: '/auth/sign-in',
       name: 'AuthSignIn',
       component: SignInVue,

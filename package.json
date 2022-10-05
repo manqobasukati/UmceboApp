@@ -9,6 +9,7 @@
     "type-check": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "animejs": "^3.2.1",
     "daisyui": "^2.24.0",
     "material-icons": "^1.11.10",
     "pinia": "^2.0.17",
