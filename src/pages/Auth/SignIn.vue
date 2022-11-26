@@ -15,21 +15,44 @@
       </div>
       <div class="border flex items-center p-1 justify-center">
         <span class="material-icons-outlined text-primary">lock</span>
-        <input type="text" class="w-full p-2 focus:outline-none" placeholder="Password here" />
+        <input
+          type="text"
+          class="w-full p-2 focus:outline-none"
+          placeholder="Password here"
+        />
       </div>
       <div class="text-right text-xs text-info">forgot password?</div>
-      <button class="btn-secondary p-2 text-white font-semibold">Submit</button>
-      <div class="text-center text-sm">Do not have an account? <span class="text-info">
-        <router-link to="/auth/sign-up"> Register</router-link>
-        </span></div>
+      <button
+        @click="SignIn"
+        class="btn-secondary p-2 text-white font-semibold"
+      >
+        Submit
+      </button>
+      <div class="text-center text-sm">
+        Do not have an account?
+        <span class="text-info">
+          <router-link to="/auth/sign-up"> Register</router-link>
+        </span>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
-  setup() {},
+  setup() {
+    const router = useRouter();
+
+    const SignIn = () => {
+      router.push('/Home');
+    };
+
+    return {
+      SignIn,
+    };
+  },
 });
 </script>

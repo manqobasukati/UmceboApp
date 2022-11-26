@@ -1,13 +1,9 @@
 <template>
-  <generic-service-layout :pageTitle="'Transactions'">
+  <generic-service-layout :pageTitle="'Budget'">
     <div class="flex flex-col gap-4 h-full w-full items-center p-4">
       <div class="flex w-full justify-between">
-        <headline-value
-          title="Total Earned"
-          value="47890"
-          color="text-success"
-        />
-        <headline-value title="Total Spent" value="47890" color="text-error" />
+        <headline-value title="Income" value="47890" color="text-success" />
+        <headline-value title="Expenses" value="47890" color="text-error" />
       </div>
 
       <div>
@@ -61,12 +57,12 @@
       @close-dialog-box="showAddTransactionDialog"
       :showDialogBox="showDialogBox"
     >
-      <add-transaction
-        v-if="activeDialogView === 'AddTransaction'"
-      ></add-transaction>
-      <edit-delete-transaction
-        v-if="activeDialogView === 'EditTransaction'"
-      ></edit-delete-transaction>
+      <add-budget
+        v-if="activeDialogView === 'AddBudget'"
+      ></add-budget>
+      <edit-delete-budget
+        v-if="activeDialogView === 'EditBudget'"
+      ></edit-delete-budget>
     </dialog-box>
   </generic-service-layout>
 </template>
@@ -78,8 +74,8 @@ import IconDetailVertical from '@/components/ui/IconDetailVertical.vue';
 import PillTab from '@/components/ui/PillTab.vue';
 import { defineComponent, ref } from 'vue';
 import GenericServiceLayout from '@/components/ui/GenericServiceLayout.vue';
-import AddTransaction from './TransactionService/AddTransaction.vue';
-import EditDeleteTransaction from './TransactionService/EditDeleteTransaction.vue';
+import AddBudget from './AddBudget.vue';
+import EditDeleteBudget from './EditDeleteBudget.vue';
 
 export default defineComponent({
   components: {
@@ -88,8 +84,8 @@ export default defineComponent({
     IconDetailVertical,
     PillTab,
     DialogBox,
-    AddTransaction,
-    EditDeleteTransaction,
+    AddBudget,
+    EditDeleteBudget,
   },
   setup() {
     console.log('TransactionsService');
@@ -102,12 +98,12 @@ export default defineComponent({
 
     const showAddTransactionDialog = () => {
       showDialogBox.value = !showDialogBox.value;
-      activeDialogView.value = 'AddTransaction';
+      activeDialogView.value = 'AddBudget';
     };
 
     const showEditTransactionDialog = () => {
       showDialogBox.value = !showDialogBox.value;
-      activeDialogView.value = 'EditTransaction';
+      activeDialogView.value = 'EditBudget';
     };
 
     return {

@@ -1,6 +1,6 @@
 <template>
   <div class="w-screen h-screen">
-    <div class="h-1/4 w-full bg-primary p-10">
+    <div class="w-full bg-primary p-10">
       <div class="flex flex-col h-full bg-white justify-between p-2">
         <icon-detail-horizontal
           v-for="(user, key) in currentUserDetails"

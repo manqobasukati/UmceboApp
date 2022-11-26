@@ -11,4 +11,5 @@ export const iconsMapper: { [name: string]: string } = {
   Stokvel: 'groups',
   Investments: 'park',
   Personal: 'person',
+  LogOff:'logout'
 };

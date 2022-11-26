@@ -1,7 +1,7 @@
 import SignInVue from '@/pages/Auth/SignIn.vue';
 import SignUpVue from '@/pages/Auth/SignUp.vue';
 import HomeVue from '@/pages/Home.vue';
-import GenericServiceLayoutVue from '@/pages/Services/GenericServiceLayout.vue';
+import BudgetServiceVue from '@/pages/Services/BudgetService/BudgetService.vue';
 import TransactionsServiceVue from '@/pages/Services/TransactionsService.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
@@ -11,7 +11,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: '/Home',
+      redirect: '/auth/sign-in',
     },
     {
       path: '/auth/sign-in',
@@ -31,6 +31,14 @@ const router = createRouter({
     {
       path: '/Home/Transactions',
       component: TransactionsServiceVue,
+    },
+    {
+      path: '/Home/Budget',
+      component: BudgetServiceVue,
+    },
+    {
+      path: '/Home/LogOff',
+      component: SignInVue,
     },
     {
       path: '/about',

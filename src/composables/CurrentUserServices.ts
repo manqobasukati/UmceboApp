@@ -7,6 +7,7 @@ export function useCurrentUserServices() {
     'Calculators',
     'Personal',
     'Settings',
+    'LogOff'
     // 'Loans',
     // 'Stokvel',
     // 'Investments',
