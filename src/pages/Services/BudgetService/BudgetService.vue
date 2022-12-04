@@ -28,38 +28,19 @@
           "
         />
       </div>
-
       <div class="flex w-full flex-col gap-2">
-        <div
-          @click="showEditTransactionDialog()"
-          class="flex gap-1 items-center w-full justify-between border border-purple-100 rounded-sm p-2"
-        >
-          <icon-detail-vertical :icon="'attach_money'" :iconSize="'icon-sm'" />
-          <div class="flex w-full flex-col">
-            <div class="text-md font-bold">Sold chickens</div>
-            <div class="text-xs text-gray-300">a month ago</div>
-          </div>
-          <div class="text-md text-success">+300</div>
-        </div>
-        <div
-          class="flex gap-1 items-center w-full justify-between border border-purple-100 rounded-sm p-2"
-        >
-          <icon-detail-vertical :icon="'attach_money'" :iconSize="'icon-sm'" />
-          <div class="flex w-full flex-col">
-            <div class="text-md font-bold">KFC</div>
-            <div class="text-xs text-gray-300">a month ago</div>
-          </div>
-          <div class="text-md text-error">-300</div>
-        </div>
+        <budget-transaction-item
+          v-for="(item, key) in [1, 2, 3]"
+          :key="key"
+          @edit-item="showEditTransactionDialog()"
+        />
       </div>
     </div>
     <dialog-box
       @close-dialog-box="showAddTransactionDialog"
       :showDialogBox="showDialogBox"
     >
-      <add-budget
-        v-if="activeDialogView === 'AddBudget'"
-      ></add-budget>
+      <add-budget v-if="activeDialogView === 'AddBudget'"></add-budget>
       <edit-delete-budget
         v-if="activeDialogView === 'EditBudget'"
       ></edit-delete-budget>
@@ -72,10 +53,13 @@ import DialogBox from '@/components/ui/DialogBox.vue';
 import HeadlineValue from '@/components/ui/HeadlineValue.vue';
 import IconDetailVertical from '@/components/ui/IconDetailVertical.vue';
 import PillTab from '@/components/ui/PillTab.vue';
-import { defineComponent, ref } from 'vue';
+import { defineComponent, onMounted, ref, watch } from 'vue';
 import GenericServiceLayout from '@/components/ui/GenericServiceLayout.vue';
 import AddBudget from './AddBudget.vue';
 import EditDeleteBudget from './EditDeleteBudget.vue';
+import BudgetTransactionItem from '@/components/ui/BudgetTransactionItem.vue';
+import useBudgetStore from '@/stores/budget';
+import { BUDGET_ACTIONS } from '@/stores/budget/actions';
 
 export default defineComponent({
   components: {
@@ -86,15 +70,32 @@ export default defineComponent({
     DialogBox,
     AddBudget,
     EditDeleteBudget,
+    BudgetTransactionItem,
   },
   setup() {
     console.log('TransactionsService');
     const pills = ref(['Expenses', 'Income']);
     const activePill = ref('Income');
 
+    const budgetStore = useBudgetStore();
+
     const activeDialogView = ref('');
 
     const showDialogBox = ref(false);
+
+    budgetStore[BUDGET_ACTIONS.SET_BUDGET_ITEMS]({
+      user_id: '66edd2bd-cad4-4fe2-a29e-ab72e5617b43',
+      transaction_type: activePill.value,
+    });
+
+    
+    watch(activePill,(newPill,OldPill)=>{
+      
+      budgetStore[BUDGET_ACTIONS.SET_BUDGET_ITEMS]({
+      user_id: '66edd2bd-cad4-4fe2-a29e-ab72e5617b43',
+      transaction_type: newPill,
+    });
+    })
 
     const showAddTransactionDialog = () => {
       showDialogBox.value = !showDialogBox.value;
