@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col items-center text-lg">
     <div class="text-gray-300">{{title}}</div>
-    <div class="font-bold" :class="`${color || 'text-gray-400'}`">4526.00</div>
+    <div class="font-bold" :class="`${color || 'text-gray-400'}`">{{value}}</div>
   </div>
 </template>
 
@@ -11,7 +11,7 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   props: {
     title: String,
-    value: String,
+    value: Number,
     color: String,
   },
   setup() {},

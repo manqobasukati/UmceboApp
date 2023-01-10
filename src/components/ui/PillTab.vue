@@ -6,9 +6,9 @@
       v-for="(pill, key) in pills"
       :key="key"
       @click="onClickPill(pill)"
-      :class="{ 'bg-white p-2 rounded-sm': pill === activePill }"
+      :class="{ 'bg-white p-2 rounded-sm': pill.ui === activePill.ui }"
     >
-      {{ pill }}
+      {{ pill.ui }}
     </div>
   </div>
 </template>
@@ -19,15 +19,18 @@ import type { PropType } from 'vue';
 
 export default defineComponent({
   props: {
-    activePill: String,
+    activePill: {
+      required: true,
+      type: Object as PropType<{ api: string; ui: string }>,
+    },
     pills: {
       required: true,
-      type: Object as PropType<string[]>,
+      type: Object as PropType<{ api: string; ui: string }[]>,
     },
   },
   emits: { setSelectedPill: String },
   setup(props, context) {
-    const onClickPill = (pill: string) => {
+    const onClickPill = (pill: { api: string; ui: string }) => {
       context.emit('setSelectedPill', pill);
     };
 

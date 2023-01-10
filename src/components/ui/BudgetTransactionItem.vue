@@ -6,34 +6,31 @@
     >
       <icon-detail-vertical :icon="'attach_money'" :iconSize="'icon-sm'" />
       <div class="flex w-full flex-col">
-        <div class="text-md font-bold">{{item?.name}}</div>
-        <div class="text-xs text-gray-300">a month ago</div>
+        <div class="text-md font-bold">{{ props.budget_item.name }}</div>
+        <div class="text-xs text-gray-300"></div>
       </div>
-      <div class="text-md text-success">{{item?.amount}}</div>
+      <div class="text-md text-success">{{ props.budget_item.amount_allocation }}</div>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import type { BudegtItem } from '@/models/Budget.model';
+<script setup lang="ts">
+import type { BudgetItem, TransactionType } from '@/models/Budget.model';
 import { defineComponent } from 'vue';
 
 import type { PropType } from 'vue';
 
-export default defineComponent({
-  emits: ['editItem'],
-  props: {
-    item: {
-      type: Object as PropType<BudegtItem>,
-    },
-  },
-  setup(props, context) {
-    const selectItem = () => {
-      context.emit('editItem');
-    };
-    return {
-      selectItem,
-    };
-  },
-});
+type Props = {
+  budget_item: BudgetItem;
+};
+
+
+const emits = defineEmits(['editItem']);
+
+const props = defineProps<Props>();
+
+
+function selectItem() {
+  emits('editItem');
+}
 </script>

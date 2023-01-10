@@ -2,8 +2,16 @@
   <generic-service-layout :pageTitle="'Budget'">
     <div class="flex flex-col gap-4 h-full w-full items-center p-4">
       <div class="flex w-full justify-between">
-        <headline-value title="Income" value="47890" color="text-success" />
-        <headline-value title="Expenses" value="47890" color="text-error" />
+        <headline-value
+          title="Income"
+          :value="totalIncome"
+          color="text-success"
+        />
+        <headline-value
+          title="Expenses"
+          :value="totalExpenses"
+          color="text-error"
+        />
       </div>
 
       <div>
@@ -28,12 +36,17 @@
           "
         />
       </div>
-      <div class="flex w-full flex-col gap-2">
-        <budget-transaction-item
-          v-for="(item, key) in [1, 2, 3]"
-          :key="key"
-          @edit-item="showEditTransactionDialog()"
-        />
+      <div
+        v-if="budgetItems"
+        class="flex w-full flex-col gap-1 overflow-scroll"
+      >
+        <div v-for="(tag, key) in budgetItems" :key="key">
+          <budget-transaction-item
+            :budget_item="tag"
+            v-if="(tag.transaction_type === activePill.api)"
+            @edit-item="showEditTransactionDialog()"
+          />
+        </div>
       </div>
     </div>
     <dialog-box
@@ -53,13 +66,14 @@ import DialogBox from '@/components/ui/DialogBox.vue';
 import HeadlineValue from '@/components/ui/HeadlineValue.vue';
 import IconDetailVertical from '@/components/ui/IconDetailVertical.vue';
 import PillTab from '@/components/ui/PillTab.vue';
-import { defineComponent, onMounted, ref, watch } from 'vue';
+import { computed, defineComponent, onMounted, ref, watch } from 'vue';
 import GenericServiceLayout from '@/components/ui/GenericServiceLayout.vue';
 import AddBudget from './AddBudget.vue';
 import EditDeleteBudget from './EditDeleteBudget.vue';
 import BudgetTransactionItem from '@/components/ui/BudgetTransactionItem.vue';
 import useBudgetStore from '@/stores/budget';
 import { BUDGET_ACTIONS } from '@/stores/budget/actions';
+import { BUDGET_GETTERS } from '@/stores/budget/getters';
 
 export default defineComponent({
   components: {
@@ -74,8 +88,11 @@ export default defineComponent({
   },
   setup() {
     console.log('TransactionsService');
-    const pills = ref(['Expenses', 'Income']);
-    const activePill = ref('Income');
+    const pills = ref([
+      { ui: 'Income', api: 'in' },
+      { ui: 'Expense', api: 'out' },
+    ]);
+    const activePill = ref({ ui: 'Income', api: 'in' });
 
     const budgetStore = useBudgetStore();
 
@@ -83,19 +100,19 @@ export default defineComponent({
 
     const showDialogBox = ref(false);
 
-    budgetStore[BUDGET_ACTIONS.SET_BUDGET_ITEMS]({
-      user_id: '66edd2bd-cad4-4fe2-a29e-ab72e5617b43',
-      transaction_type: activePill.value,
+    onMounted(() => {
+      budgetStore[BUDGET_ACTIONS.SET_BUDGET_ITEMS]({
+        user_id: '66edd2bd-cad4-4fe2-a29e-ab72e5617b43',
+        transaction_type: activePill.value.api,
+      });
     });
 
-    
-    watch(activePill,(newPill,OldPill)=>{
-      
+    watch(activePill, (newPill, OldPill) => {
       budgetStore[BUDGET_ACTIONS.SET_BUDGET_ITEMS]({
-      user_id: '66edd2bd-cad4-4fe2-a29e-ab72e5617b43',
-      transaction_type: newPill,
+        user_id: '66edd2bd-cad4-4fe2-a29e-ab72e5617b43',
+        transaction_type: newPill.api,
+      });
     });
-    })
 
     const showAddTransactionDialog = () => {
       showDialogBox.value = !showDialogBox.value;
@@ -107,12 +124,37 @@ export default defineComponent({
       activeDialogView.value = 'EditBudget';
     };
 
+    const budgetItems = computed(() => {
+      return budgetStore.budget_items;
+    });
+
+    const totalIncome = computed(() => {
+      return budgetStore.budget_items?.reduce((a, b) => {
+        if (b.transaction_type === 'in') {
+          return a + b.amount_allocation;
+        }
+        return a;
+      }, 0);
+    });
+
+    const totalExpenses = computed(() => {
+      return budgetStore.budget_items?.reduce((a, b) => {
+        if (b.transaction_type === 'out') {
+          return a + b.amount_allocation;
+        }
+        return a;
+      }, 0);
+    });
+
     return {
       pills,
       activePill,
       showAddTransactionDialog,
       showDialogBox,
       activeDialogView,
+      budgetItems,
+      totalIncome,
+      totalExpenses,
       showEditTransactionDialog,
     };
   },

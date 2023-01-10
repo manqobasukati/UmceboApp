@@ -1,4 +1,4 @@
-import type { BudegtItem } from '@/models/Budget.model';
+import type { BudgetItem } from '@/models/Budget.model';
 import {
   deletBudgetItem,
   getUserBudget,
@@ -44,7 +44,7 @@ const actions = {
 
   [BUDGET_ACTIONS.SET_ACTIVE_BUDGET_ITEM](
     this: BudgetState,
-    values: { budget_item: BudegtItem }
+    values: { budget_item: BudgetItem }
   ) {
     this.active_budget_item = values.budget_item;
   },
