@@ -4,10 +4,10 @@
       <div class="flex w-full justify-between">
         <headline-value
           title="Total Earned"
-          value="47890"
+          :value="47890"
           color="text-success"
         />
-        <headline-value title="Total Spent" value="47890" color="text-error" />
+        <headline-value title="Total Spent" :value="47890" color="text-error" />
       </div>
 
       <div>
@@ -76,7 +76,7 @@ import DialogBox from '@/components/ui/DialogBox.vue';
 import HeadlineValue from '@/components/ui/HeadlineValue.vue';
 import IconDetailVertical from '@/components/ui/IconDetailVertical.vue';
 import PillTab from '@/components/ui/PillTab.vue';
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, type Ref } from 'vue';
 import GenericServiceLayout from '@/components/ui/GenericServiceLayout.vue';
 import AddTransaction from './TransactionService/AddTransaction.vue';
 import EditDeleteTransaction from './TransactionService/EditDeleteTransaction.vue';
@@ -93,8 +93,14 @@ export default defineComponent({
   },
   setup() {
     console.log('TransactionsService');
-    const pills = ref(['Expenses', 'Income']);
-    const activePill = ref('Income');
+    const pills: Ref<{ api: string; ui: string }[]> = ref([
+      { api: '', ui: 'Income' },
+      { api: '', ui: 'Expenses' },
+    ]);
+    const activePill: Ref<{ api: string; ui: string }> = ref({
+      api: '',
+      ui: 'Income',
+    });
 
     const activeDialogView = ref('');
 
