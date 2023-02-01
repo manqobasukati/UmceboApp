@@ -22,7 +22,7 @@
   </template>
   
   <script lang="ts">
-  import anime from "animejs";
+  import anime from 'animejs/lib/anime.es.js';
   import { watch } from "vue";
   import { defineComponent, ref } from "vue";
   
