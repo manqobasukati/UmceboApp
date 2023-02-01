@@ -9,20 +9,14 @@
       <input
         type="text"
         class="p-2 border-2 border-secondary"
-        placeholder="Category"
+        placeholder="Amount Allocation"
       />
   
       <button class="p-2 bg-secondary text-white font-bold">Submit</button>
     </div>
   </template>
   
-  <script lang="ts">
-  import { defineComponent } from 'vue';
-  
-  export default defineComponent({
-    setup() {
-      console.log('Loaded Transaction view');
-    },
-  });
+  <script setup lang="ts">
+
   </script>
   
