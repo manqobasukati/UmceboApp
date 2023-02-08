@@ -16,9 +16,7 @@
 
 <script setup lang="ts">
 import type { BudgetItem, TransactionType } from '@/models/Budget.model';
-import { defineComponent } from 'vue';
 
-import type { PropType } from 'vue';
 
 type Props = {
   budget_item: BudgetItem;
