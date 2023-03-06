@@ -10,7 +10,7 @@ export async function getUserBudget(
     .from('tags')
     .select('*')
     .eq('user_id', userId)
-   // .eq('transaction_type', transactionType)
+    // .eq('transaction_type', transactionType)
     .eq('month', `${date.getMonth() + 1}`)
     .eq('year', `${date.getFullYear()}`);
 
@@ -21,22 +21,40 @@ export async function getUserBudget(
   }
 }
 
-export async function addBudgetItem(params:BudgetItem) {
-    const {data,error} = await supabase.from('tags').insert([params]);
+export async function addBudgetItem(params: BudgetItem) {
+  const { data, error } = await supabase.from('tags').insert([params]);
 
-    if(data){
-      return data;
-    }else{
-      throw data;
-    }
+  if (data) {
+    return data;
+  } else {
+    throw error;
+  }
 }
 
-export async function deletBudgetItem(budgetItemId: string) {}
+export async function deletBudgetItem(budgetItemId: string) {
+  const { data, error } = await supabase
+    .from('tags')
+    .delete()
+    .eq('tag_id', budgetItemId);
 
-export async function updateBudgetItem(budgetItemId: string) {}
+  if (data) {
+    return data;
+  } else {
+    throw error;
+  }
+}
+
+export async function updateBudgetItem(budgetItem: BudgetItem) {
+  const { data, error } = await supabase
+    .from('tags')
+    .update({ ...budgetItem })
+    .eq('tag_id', budgetItem.tag_id);
+
+  if (data) {
+    return data;
+  } else {
+    throw error;
+  }
+}
 
 export async function getBudgetItem(budgetItemId: string) {}
-
-
-
-

@@ -39,9 +39,9 @@ const actions = {
 
   async [BUDGET_ACTIONS.UPDATE_BUDGET_ITEM](
     this: BudgetState,
-    values: { budget_item_id: string }
+    values: { budget_item: BudgetItem }
   ) {
-    return await updateBudgetItem(values.budget_item_id);
+    return await updateBudgetItem(values.budget_item);
   },
 
   [BUDGET_ACTIONS.SET_ACTIVE_BUDGET_ITEM](

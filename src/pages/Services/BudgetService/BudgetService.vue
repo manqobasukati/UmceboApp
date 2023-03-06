@@ -22,7 +22,7 @@
           :spaceBetween="'gap'"
           :iconSize="'icon-md'"
           color="text-success"
-          @click="showAddTransactionDialog()"
+          @click="showDialog('AddBudget')"
         />
       </div>
       <div class="w-full">
@@ -44,14 +44,13 @@
           <budget-transaction-item
             :budget_item="tag"
             v-if="tag.transaction_type === activePill.api"
-            @edit-item="showEditTransactionDialog"
-
+            @edit-item="showDialog('EditBudget', tag)"
           />
         </div>
       </div>
     </div>
     <dialog-box
-      @close-dialog-box="showAddTransactionDialog"
+      @close-dialog-box="showDialog('')"
       :showDialogBox="showDialogBox"
     >
       <add-budget
@@ -60,6 +59,8 @@
       ></add-budget>
       <edit-delete-budget
         :budget_item="activeBudgetItem"
+        @edit-item="handleEditBudget"
+        @delete-item="handleDeleteBudget"
         v-if="activeDialogView === 'EditBudget'"
       ></edit-delete-budget>
     </dialog-box>
@@ -125,10 +126,20 @@ export default defineComponent({
       activeDialogView.value = 'AddBudget';
     };
 
-    const showEditTransactionDialog = (item:BudgetItem) => {
-      budgetStore[BUDGET_ACTIONS.SET_ACTIVE_BUDGET_ITEM]({budget_item:item});
+    const showEditTransactionDialog = (item: BudgetItem) => {
+      budgetStore[BUDGET_ACTIONS.SET_ACTIVE_BUDGET_ITEM]({ budget_item: item });
       showDialogBox.value = !showDialogBox.value;
       activeDialogView.value = 'EditBudget';
+    };
+
+    const showDialog = (view: string, budgetItem?: BudgetItem) => {
+      if (budgetItem) {
+        budgetStore[BUDGET_ACTIONS.SET_ACTIVE_BUDGET_ITEM]({
+          budget_item: budgetItem,
+        });
+      }
+      showDialogBox.value = !showDialogBox.value;
+      activeDialogView.value = view;
     };
 
     const budgetItems = computed(() => {
@@ -154,7 +165,39 @@ export default defineComponent({
     });
 
     function handleAddBudget(value: BudgetItem) {
-      budgetStore[BUDGET_ACTIONS.ADD_BUDGET_ITEM]({ budget_item: value });
+      budgetStore[BUDGET_ACTIONS.ADD_BUDGET_ITEM]({ budget_item: value }).then(
+        async () => {
+          await budgetStore[BUDGET_ACTIONS.SET_BUDGET_ITEMS]({
+            user_id: '66edd2bd-cad4-4fe2-a29e-ab72e5617b43',
+            transaction_type: activePill.value.api,
+          });
+          showDialogBox.value != showDialogBox.value;
+        }
+      );
+    }
+
+    async function handleEditBudget(value: BudgetItem) {
+      console.log('Emiitted', value);
+      budgetStore[BUDGET_ACTIONS.UPDATE_BUDGET_ITEM]({
+        budget_item: value,
+      });
+      await budgetStore[BUDGET_ACTIONS.SET_BUDGET_ITEMS]({
+        user_id: '66edd2bd-cad4-4fe2-a29e-ab72e5617b43',
+        transaction_type: activePill.value.api,
+      });
+      showDialog('');
+    }
+
+    async function handleDeleteBudget(value: BudgetItem) {
+      budgetStore[BUDGET_ACTIONS.DELETE_BUDGET_ITEM]({
+        budget_item_id: value.tag_id as string,
+      });
+
+      await budgetStore[BUDGET_ACTIONS.SET_BUDGET_ITEMS]({
+        user_id: '66edd2bd-cad4-4fe2-a29e-ab72e5617b43',
+        transaction_type: activePill.value.api,
+      });
+      showDialog('');
     }
 
     return {
@@ -168,9 +211,12 @@ export default defineComponent({
       totalExpenses,
       showEditTransactionDialog,
       handleAddBudget,
-      activeBudgetItem:computed(()=>{
-        return budgetStore[BUDGET_GETTERS.GET_ACTIVE_BUDGET_ITEM]
-      })
+      handleEditBudget,
+      handleDeleteBudget,
+      showDialog,
+      activeBudgetItem: computed(() => {
+        return budgetStore[BUDGET_GETTERS.GET_ACTIVE_BUDGET_ITEM];
+      }),
     };
   },
 });
