@@ -21,10 +21,22 @@ export async function getUserBudget(
   }
 }
 
+export async function addBudgetItem(params:BudgetItem) {
+    const {data,error} = await supabase.from('tags').insert([params]);
+
+    if(data){
+      return data;
+    }else{
+      throw data;
+    }
+}
+
 export async function deletBudgetItem(budgetItemId: string) {}
 
 export async function updateBudgetItem(budgetItemId: string) {}
 
 export async function getBudgetItem(budgetItemId: string) {}
+
+
 
 

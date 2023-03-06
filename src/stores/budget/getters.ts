@@ -11,7 +11,7 @@ const getters:any = {
   [BUDGET_GETTERS.GET_BUDGET_ITEMS](this: BudgetState) {
     return this.budget_items as BudgetItem[];
   },
-  [BUDGET_GETTERS.GET_BUDGET_ITEMS](this: BudgetState) {
+  [BUDGET_GETTERS.GET_ACTIVE_BUDGET_ITEM](this: BudgetState) {
     return this.active_budget_item;
   },
 };

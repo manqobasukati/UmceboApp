@@ -43,8 +43,9 @@
         <div v-for="(tag, key) in budgetItems" :key="key">
           <budget-transaction-item
             :budget_item="tag"
-            v-if="(tag.transaction_type === activePill.api)"
-            @edit-item="showEditTransactionDialog()"
+            v-if="tag.transaction_type === activePill.api"
+            @edit-item="showEditTransactionDialog"
+
           />
         </div>
       </div>
@@ -53,8 +54,12 @@
       @close-dialog-box="showAddTransactionDialog"
       :showDialogBox="showDialogBox"
     >
-      <add-budget v-if="activeDialogView === 'AddBudget'"></add-budget>
+      <add-budget
+        v-if="activeDialogView === 'AddBudget'"
+        @add-budget="handleAddBudget"
+      ></add-budget>
       <edit-delete-budget
+        :budget_item="activeBudgetItem"
         v-if="activeDialogView === 'EditBudget'"
       ></edit-delete-budget>
     </dialog-box>
@@ -74,6 +79,7 @@ import BudgetTransactionItem from '@/components/ui/BudgetTransactionItem.vue';
 import useBudgetStore from '@/stores/budget';
 import { BUDGET_ACTIONS } from '@/stores/budget/actions';
 import { BUDGET_GETTERS } from '@/stores/budget/getters';
+import type { BudgetItem } from '@/models/Budget.model';
 
 export default defineComponent({
   components: {
@@ -119,7 +125,8 @@ export default defineComponent({
       activeDialogView.value = 'AddBudget';
     };
 
-    const showEditTransactionDialog = () => {
+    const showEditTransactionDialog = (item:BudgetItem) => {
+      budgetStore[BUDGET_ACTIONS.SET_ACTIVE_BUDGET_ITEM]({budget_item:item});
       showDialogBox.value = !showDialogBox.value;
       activeDialogView.value = 'EditBudget';
     };
@@ -146,6 +153,10 @@ export default defineComponent({
       }, 0);
     });
 
+    function handleAddBudget(value: BudgetItem) {
+      budgetStore[BUDGET_ACTIONS.ADD_BUDGET_ITEM]({ budget_item: value });
+    }
+
     return {
       pills,
       activePill,
@@ -156,6 +167,10 @@ export default defineComponent({
       totalIncome,
       totalExpenses,
       showEditTransactionDialog,
+      handleAddBudget,
+      activeBudgetItem:computed(()=>{
+        return budgetStore[BUDGET_GETTERS.GET_ACTIVE_BUDGET_ITEM]
+      })
     };
   },
 });

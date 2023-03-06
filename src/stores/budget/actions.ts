@@ -1,5 +1,6 @@
 import type { BudgetItem } from '@/models/Budget.model';
 import {
+  addBudgetItem,
   deletBudgetItem,
   getUserBudget,
   updateBudgetItem,
@@ -11,21 +12,22 @@ export enum BUDGET_ACTIONS {
   'UPDATE_BUDGET_ITEM' = 'update_budget_item',
   'DELETE_BUDGET_ITEM' = 'delete_budget_item',
   'SET_ACTIVE_BUDGET_ITEM' = 'set_active_budget_item',
+  'ADD_BUDGET_ITEM' = 'ADD_BUDGET_ITEM',
 }
 
 const actions = {
   async [BUDGET_ACTIONS.SET_BUDGET_ITEMS](
     this: BudgetState,
-    values: { user_id: string,transaction_type:string }
+    values: { user_id: string; transaction_type: string }
   ) {
-
-    return getUserBudget(values.user_id,values.transaction_type ).then((val)=>{
+    return getUserBudget(values.user_id, values.transaction_type)
+      .then((val) => {
         this.budget_items = val;
-        console.log('values',val);
-    }).catch((e)=>{
-        console.log(e)
-    })
-    
+        console.log('values', val);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   },
 
   async [BUDGET_ACTIONS.DELETE_BUDGET_ITEM](
@@ -47,6 +49,12 @@ const actions = {
     values: { budget_item: BudgetItem }
   ) {
     this.active_budget_item = values.budget_item;
+  },
+  async [BUDGET_ACTIONS.ADD_BUDGET_ITEM](
+    this: BudgetState,
+    values: { budget_item: BudgetItem }
+  ) {
+    return await addBudgetItem(values.budget_item);
   },
 };
 

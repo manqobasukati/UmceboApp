@@ -29,6 +29,6 @@ const props = defineProps<Props>();
 
 
 function selectItem() {
-  emits('editItem');
+  emits('editItem',props.budget_item);
 }
 </script>
