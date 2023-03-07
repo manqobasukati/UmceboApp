@@ -17,7 +17,7 @@ export default defineConfig({
         name: 'Umcebo Money',
         short_name: 'Umcebo',
         description: 'The web builder app',
-        theme_color: '#81CFC1',
+        theme_color: '#3F3D57',
         icons: [
           {
             src: 'android-chrome-192x192.png',
