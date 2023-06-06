@@ -165,13 +165,15 @@ export default defineComponent({
     });
 
     function handleAddBudget(value: BudgetItem) {
+      console.log('Valuable 1',showDialogBox.value)
       budgetStore[BUDGET_ACTIONS.ADD_BUDGET_ITEM]({ budget_item: value }).then(
         async () => {
           await budgetStore[BUDGET_ACTIONS.SET_BUDGET_ITEMS]({
             user_id: '66edd2bd-cad4-4fe2-a29e-ab72e5617b43',
             transaction_type: activePill.value.api,
           });
-          showDialogBox.value != showDialogBox.value;
+          showDialogBox.value = !showDialogBox.value;
+          console.log('Valuable',showDialogBox.value)
         }
       );
     }
