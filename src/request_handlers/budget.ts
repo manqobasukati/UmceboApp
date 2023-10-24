@@ -14,6 +14,7 @@ export async function getUserBudget(
     .eq('month', `${date.getMonth() + 1}`)
     .eq('year', `${date.getFullYear()}`);
 
+  console.log('User budget', data);
   if (data) {
     return data;
   } else {

@@ -16,7 +16,7 @@ export enum BUDGET_ACTIONS {
 }
 
 const actions = {
-  async [BUDGET_ACTIONS.SET_BUDGET_ITEMS](
+  [BUDGET_ACTIONS.SET_BUDGET_ITEMS](
     this: BudgetState,
     values: { user_id: string; transaction_type: string }
   ) {
@@ -50,11 +50,17 @@ const actions = {
   ) {
     this.active_budget_item = values.budget_item;
   },
-  async [BUDGET_ACTIONS.ADD_BUDGET_ITEM](
+  [BUDGET_ACTIONS.ADD_BUDGET_ITEM](
     this: BudgetState,
     values: { budget_item: BudgetItem }
   ) {
-    return await addBudgetItem(values.budget_item);
+    try {
+      addBudgetItem(values.budget_item);
+    } catch (e) {
+      console.log('Handle', e);
+    }
+
+   
   },
 };
 

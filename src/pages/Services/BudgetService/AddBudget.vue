@@ -56,7 +56,12 @@ const budgetCategory: Ref<BudgetItem> = ref({
 const emits = defineEmits(['addBudget']);
 
 async function submitBudget() {
-  const user_id = await (await supabase.auth.getUser()).data.user?.id;
-  emits('addBudget', { ...budgetCategory.value, user_id: user_id });
+  try {
+    const user_id = await (await supabase.auth.getUser()).data.user?.id;
+    console.log(user_id);
+    emits('addBudget', { ...budgetCategory.value, user_id: user_id });
+  } catch (e) {
+    console.log('catch', e);
+  }
 }
 </script>

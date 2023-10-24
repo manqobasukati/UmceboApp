@@ -49,7 +49,7 @@
       let white_box = ref(null as null | HTMLDivElement);
   
       watch(white_box, () => {
-        console.log(white_box.value?.clientHeight);
+        console.log(white_box.value?.clientHeight,"IT");
         if (white_box.value) {
           anime({
             targets: `#myBox`,
