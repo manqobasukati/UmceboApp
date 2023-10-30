@@ -75,11 +75,9 @@ const actions = {
     this: BudgetState,
     values: { budget_item: BudgetItem }
   ) {
-    try {
-      addBudgetItem(values.budget_item);
-    } catch (e) {
-      console.log('Handle', e);
-    }
+    return addBudgetItem(values.budget_item).then(() => {
+      this.budget_items?.push(values.budget_item);
+    });
   },
 };
 

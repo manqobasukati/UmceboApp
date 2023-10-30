@@ -153,50 +153,27 @@ const totalExpenses = computed(() => {
 
 function handleAddBudget(value: BudgetItem) {
   console.log('Valuable 1', value);
-  budgetStore[BUDGET_ACTIONS.ADD_BUDGET_ITEM]({ budget_item: value });
-
-  // .then(
-  //   () => {
-  //     budgetStore[BUDGET_ACTIONS.SET_BUDGET_ITEMS]({
-  //       user_id: '66edd2bd-cad4-4fe2-a29e-ab72e5617b43',
-  //       transaction_type: activePill.value.api,
-  //     }).then(() => {
-  //       showDialogBox.value = !showDialogBox.value;
-  //     });
-
-  //     console.log(showDialogBox.value);
-  //   }
-  // );
+  budgetStore[BUDGET_ACTIONS.ADD_BUDGET_ITEM]({ budget_item: value }).then(
+    () => {
+      showDialog('');
+    }
+  );
 }
 
 async function handleEditBudget(value: BudgetItem) {
- 
   budgetStore[BUDGET_ACTIONS.UPDATE_BUDGET_ITEM]({
     budget_item: value,
+  }).then(() => {
+    showDialog('');
   });
-  // .then(() => {
-  //   console.log('Eexuting this?');
-  //   budgetStore[BUDGET_ACTIONS.SET_BUDGET_ITEMS]({
-  //     user_id: '66edd2bd-cad4-4fe2-a29e-ab72e5617b43',
-  //     transaction_type: activePill.value.api,
-  //   });
-  // }).catch((e)=>{
-  //   console.log("The erros is",e)
-  // })
-
-  showDialog('');
 }
 
 function handleDeleteBudget(value: BudgetItem) {
   budgetStore[BUDGET_ACTIONS.DELETE_BUDGET_ITEM]({
     budget_item_id: value.tag_id as string,
+  }).then(() => {
+    showDialog('');
   });
-
-  budgetStore[BUDGET_ACTIONS.SET_BUDGET_ITEMS]({
-    user_id: '66edd2bd-cad4-4fe2-a29e-ab72e5617b43',
-    transaction_type: activePill.value.api,
-  });
-  showDialog('');
 }
 
 const activeBudgetItem = computed(() => {
