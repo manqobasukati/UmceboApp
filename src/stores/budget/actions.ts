@@ -6,6 +6,7 @@ import {
   updateBudgetItem,
 } from '@/request_handlers/budget';
 import type { BudgetState } from '.';
+import useBudgetStore from '.';
 
 export enum BUDGET_ACTIONS {
   'SET_BUDGET_ITEMS' = 'set_budget_items',
@@ -23,10 +24,10 @@ const actions = {
     return getUserBudget(values.user_id, values.transaction_type)
       .then((val) => {
         this.budget_items = val;
-        console.log('values', val);
+        console.log('values=>', val);
       })
       .catch((e) => {
-        console.log(e);
+        console.log('Error', e);
       });
   },
 
@@ -34,14 +35,34 @@ const actions = {
     this: BudgetState,
     values: { budget_item_id: string }
   ) {
-    return await deletBudgetItem(values.budget_item_id);
+    return deletBudgetItem(values.budget_item_id)
+      .then(() => {
+        this.budget_items?.splice(
+          this.budget_items.findIndex((v: BudgetItem) => {
+            return values.budget_item_id === v.tag_id;
+          }),
+          1
+        );
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   },
 
   async [BUDGET_ACTIONS.UPDATE_BUDGET_ITEM](
     this: BudgetState,
     values: { budget_item: BudgetItem }
   ) {
-    return await updateBudgetItem(values.budget_item);
+    //stor[BUDGET_ACTIONS.SET_BUDGET_ITEMS]({user_id:values.budget_item.});
+    return updateBudgetItem(values.budget_item).then((val: BudgetItem) => {
+      const itemIndex = this.budget_items?.findIndex((v) => {
+        return v.tag_id === val.tag_id;
+      }) as number;
+      if (this.budget_items) {
+        this.budget_items[itemIndex] = val;
+        console.log(this.budget_items);
+      }
+    });
   },
 
   [BUDGET_ACTIONS.SET_ACTIVE_BUDGET_ITEM](
@@ -59,8 +80,6 @@ const actions = {
     } catch (e) {
       console.log('Handle', e);
     }
-
-   
   },
 };
 

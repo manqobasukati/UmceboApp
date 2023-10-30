@@ -23,7 +23,7 @@ export async function getUserBudget(
 }
 
 export async function addBudgetItem(params: BudgetItem) {
-  const { data, error } = await supabase.from('tags').insert([params]);
+  const { data, error } = await supabase.from('tags').insert([params]).select();
 
   if (data) {
     return data;
@@ -33,29 +33,35 @@ export async function addBudgetItem(params: BudgetItem) {
 }
 
 export async function deletBudgetItem(budgetItemId: string) {
-  const { data, error } = await supabase
+  console.log(budgetItemId)
+  const { error } = await supabase
     .from('tags')
     .delete()
     .eq('tag_id', budgetItemId);
 
-  if (data) {
-    return data;
-  } else {
+  if (error) {
     throw error;
-  }
+  } 
+
+  return;
 }
 
 export async function updateBudgetItem(budgetItem: BudgetItem) {
-  const { data, error } = await supabase
+  const budget = { ...budgetItem };
+  const { data } = await supabase
     .from('tags')
-    .update({ ...budgetItem })
-    .eq('tag_id', budgetItem.tag_id);
+    .update(budget)
+    .eq('tag_id', budget.tag_id);
 
-  if (data) {
-    return data;
-  } else {
-    throw error;
+  let { data: tags, error } = await supabase
+    .from('tags')
+    .select('*')
+    .eq('tag_id', budget.tag_id);
+
+  if (tags) {
+    return tags[0] as BudgetItem;
   }
-}
 
-export async function getBudgetItem(budgetItemId: string) {}
+ 
+  throw error;
+}
