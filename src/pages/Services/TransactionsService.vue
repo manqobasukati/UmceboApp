@@ -33,27 +33,16 @@
         />
       </div>
 
-      <div class="flex w-full flex-col gap-2">
-        <div
-          @click="showEditTransactionDialog()"
-          class="flex gap-1 items-center w-full justify-between border border-purple-100 rounded-sm p-2"
-        >
-          <icon-detail-vertical :icon="'attach_money'" :iconSize="'icon-sm'" />
-          <div class="flex w-full flex-col">
-            <div class="text-md font-bold">Sold chickens</div>
-            <div class="text-xs text-gray-300">a month ago</div>
-          </div>
-          <div class="text-md text-success">+300</div>
-        </div>
-        <div
-          class="flex gap-1 items-center w-full justify-between border border-purple-100 rounded-sm p-2"
-        >
-          <icon-detail-vertical :icon="'attach_money'" :iconSize="'icon-sm'" />
-          <div class="flex w-full flex-col">
-            <div class="text-md font-bold">KFC</div>
-            <div class="text-xs text-gray-300">a month ago</div>
-          </div>
-          <div class="text-md text-error">-300</div>
+      <div
+        v-if="transactionStore.transaction_items"
+        class="flex w-full flex-col gap-1 overflow-scroll"
+      >
+     
+        <div v-for="(transaction, key) in transactionStore.transaction_items" :key="key">
+          <budget-transaction-item
+            :transaction_item="transaction"
+            v-if="transaction.transaction_type === activePill.api"
+          />
         </div>
       </div>
     </div>
@@ -71,59 +60,46 @@
   </generic-service-layout>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import DialogBox from '@/components/ui/DialogBox.vue';
 import HeadlineValue from '@/components/ui/HeadlineValue.vue';
 import IconDetailVertical from '@/components/ui/IconDetailVertical.vue';
 import PillTab from '@/components/ui/PillTab.vue';
-import { defineComponent, ref, type Ref } from 'vue';
+import { defineComponent, onMounted, ref, type Ref } from 'vue';
 import GenericServiceLayout from '@/components/ui/GenericServiceLayout.vue';
 import AddTransaction from './TransactionService/AddTransaction.vue';
 import EditDeleteTransaction from './TransactionService/EditDeleteTransaction.vue';
+import useTransactionStore from '@/stores/transactions';
+import { TRANSACTION_ACTIONS } from '@/stores/transactions/actions';
 
-export default defineComponent({
-  components: {
-    GenericServiceLayout,
-    HeadlineValue,
-    IconDetailVertical,
-    PillTab,
-    DialogBox,
-    AddTransaction,
-    EditDeleteTransaction,
-  },
-  setup() {
-    console.log('TransactionsService');
-    const pills: Ref<{ api: string; ui: string }[]> = ref([
-      { api: '', ui: 'Income' },
-      { api: '', ui: 'Expenses' },
-    ]);
-    const activePill: Ref<{ api: string; ui: string }> = ref({
-      api: '',
-      ui: 'Income',
-    });
+import BudgetTransactionItem from '@/components/ui/BudgetTransactionItem.vue';
 
-    const activeDialogView = ref('');
+const pills = ref([
+  { ui: 'Income', api: 'in' },
+  { ui: 'Expense', api: 'out' },
+]);
+const activePill = ref({ ui: 'Income', api: 'in' });
 
-    const showDialogBox = ref(false);
+const activeDialogView = ref('');
 
-    const showAddTransactionDialog = () => {
-      showDialogBox.value = !showDialogBox.value;
-      activeDialogView.value = 'AddTransaction';
-    };
+const showDialogBox = ref(false);
 
-    const showEditTransactionDialog = () => {
-      showDialogBox.value = !showDialogBox.value;
-      activeDialogView.value = 'EditTransaction';
-    };
+const transactionStore = useTransactionStore();
 
-    return {
-      pills,
-      activePill,
-      showAddTransactionDialog,
-      showDialogBox,
-      activeDialogView,
-      showEditTransactionDialog,
-    };
-  },
+onMounted(() => {
+  transactionStore[TRANSACTION_ACTIONS.SET_TRANSACTION_ITEMS]({
+    user_id: '66edd2bd-cad4-4fe2-a29e-ab72e5617b43',
+    transaction_type: activePill.value.api,
+  });
 });
+
+const showAddTransactionDialog = () => {
+  showDialogBox.value = !showDialogBox.value;
+  activeDialogView.value = 'AddTransaction';
+};
+
+const showEditTransactionDialog = () => {
+  showDialogBox.value = !showDialogBox.value;
+  activeDialogView.value = 'EditTransaction';
+};
 </script>
