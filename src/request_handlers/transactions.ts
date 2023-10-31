@@ -10,8 +10,9 @@ export async function getUserTransactions(
   const { data, error } = await supabase
     .from('transactions')
     .select('*')
+    .order('date_created',{ascending:false})
     .eq('user_id', userId);
-
+   
   
   if (data) {
     return data;

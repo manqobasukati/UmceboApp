@@ -15,7 +15,14 @@
     <div
       v-else-if="transaction_item"
       class="flex gap-1 items-center w-full justify-between border border-purple-100 rounded-sm p-2"
-    ></div>
+    >
+      <icon-detail-vertical :icon="'attach_money'" :iconSize="'icon-sm'" />
+      <div class="flex w-full flex-col">
+        <div class="text-md font-bold">{{ transaction_item.description }}</div>
+        <div class="text-xs text-gray-300">a month ago</div>
+      </div>
+      <div class="text-md text-error">{{ transaction_item.amount }}</div>
+    </div>
   </div>
 </template>
 
@@ -24,7 +31,7 @@ import type { BudgetItem, TransactionType } from '@/models/Budget.model';
 import type { TransactionItem } from '@/models/Transaction.model';
 
 type Props = {
-  budget_item?: BudgetItem ;
+  budget_item?: BudgetItem;
   transaction_item?: TransactionItem;
 };
 
