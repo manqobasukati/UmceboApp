@@ -37,10 +37,13 @@
         v-if="transactionStore.transaction_items"
         class="flex w-full flex-col gap-1 overflow-scroll"
       >
-     
-        <div v-for="(transaction, key) in transactionStore.transaction_items" :key="key">
+        <div
+          v-for="(transaction, key) in transactionStore.transaction_items"
+          :key="key"
+        >
           <budget-transaction-item
             :transaction_item="transaction"
+            @edit-item="showDialog('EditTransaction', transaction)"
             v-if="transaction.transaction_type === activePill.api"
           />
         </div>
@@ -54,6 +57,7 @@
         v-if="activeDialogView === 'AddTransaction'"
       ></add-transaction>
       <edit-delete-transaction
+        :transaction_item="(transactionStore.active_transaction_item as TransactionItem)"
         v-if="activeDialogView === 'EditTransaction'"
       ></edit-delete-transaction>
     </dialog-box>
@@ -73,6 +77,7 @@ import useTransactionStore from '@/stores/transactions';
 import { TRANSACTION_ACTIONS } from '@/stores/transactions/actions';
 
 import BudgetTransactionItem from '@/components/ui/BudgetTransactionItem.vue';
+import type { TransactionItem } from '@/models/Transaction.model';
 
 const pills = ref([
   { ui: 'Income', api: 'in' },
@@ -86,12 +91,32 @@ const showDialogBox = ref(false);
 
 const transactionStore = useTransactionStore();
 
+const showDialog = (view: string, transactionItem?: TransactionItem) => {
+  if (transactionItem) {
+    transactionStore[TRANSACTION_ACTIONS.SET_ACTIVE_TRANSACTION_ITEM]({
+      transaction_item: transactionItem,
+    });
+  }
+  showDialogBox.value = !showDialogBox.value;
+  activeDialogView.value = view;
+
+  console.log(transactionStore.active_transaction_item);
+};
+
 onMounted(() => {
   transactionStore[TRANSACTION_ACTIONS.SET_TRANSACTION_ITEMS]({
     user_id: '66edd2bd-cad4-4fe2-a29e-ab72e5617b43',
     transaction_type: activePill.value.api,
   });
 });
+
+async function handleEditTransaction(value: TransactionItem) {
+  transactionStore[TRANSACTION_ACTIONS.UPDATE_TRANSACTION_ITEM]({
+    transaction_item: value,
+  }).then(() => {
+    showDialog('');
+  });
+}
 
 const showAddTransactionDialog = () => {
   showDialogBox.value = !showDialogBox.value;
