@@ -3,7 +3,7 @@ import { supabase } from '@/supabase';
 
 export async function getUserBudget(
   userId: string,
-  transactionType: string
+  transactionType?: string
 ): Promise<BudgetItem[] | any> {
   const date = new Date();
   const { data, error } = await supabase

@@ -5,7 +5,7 @@ export interface TransactionItem {
   description: string;
   date_created: Date;
   tag_id: string;
-  transaction_type: TransactionType;
+  transaction_type?: TransactionType;
   user_id: string;
   amount: number;
 }
