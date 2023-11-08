@@ -13,32 +13,16 @@
       v-model="internal.amount"
       placeholder="Amount"
     />
-    <select
-      
-      v-model="internal.tag_id"
-      class="p-2 border-2 border-secondary"
-    >
-      
+    <select v-model="internal.tag_id" class="p-2 border-2 border-secondary">
       <option
-        v-for="(tag, key) in budgetTags"
-        :key="tag.tag_id"
-        :value="tag.tag_id"
-      >
-        {{ tag.name }}
-      </option>
-    </select>
-    <input v-if="false" v-model="internal.tag_id" class="p-2 border-2 border-secondary" list="tags" name="tag"  />
-    <datalist id="tags">
-     
-      <option
-       
         v-for="(tag, key) in budgetTags"
         :key="key"
         :value="tag.tag_id"
       >
         {{ tag.name }}
       </option>
-    </datalist>
+    </select>
+
     <div class="flex w-full justify-between gap-2">
       <button
         @click="submit('editItem')"
@@ -78,11 +62,13 @@ const budgetTags: Ref<BudgetItem[] | null> = ref(null);
 
 const emits = defineEmits(['deleteItem', 'editItem']);
 
+const selectedTag:Ref<BudgetItem> = ref({} as BudgetItem);
+
 onMounted(() => {
   supabase.auth.getUser().then((user) => {
     getUserBudget(user.data.user?.id as string).then((tags) => {
       budgetTags.value = tags;
-      console.log('Tags');
+      
     });
   });
 });
