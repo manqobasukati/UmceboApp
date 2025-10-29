@@ -13,11 +13,11 @@
       v-model="internal.amount"
       placeholder="Amount"
     />
-    <select v-model="internal.tag_id" class="p-2 border-2 border-secondary">
+    <select v-model="internal.id" class="p-2 border-2 border-secondary">
       <option
         v-for="(tag, key) in budgetTags"
         :key="key"
-        :value="tag.tag_id"
+        :value="tag.id"
       >
         {{ tag.name }}
       </option>
@@ -58,7 +58,7 @@ const internal: Ref<TransactionItem> = ref(
   JSON.parse(JSON.stringify(props.transaction_item))
 );
 
-const budgetTags: Ref<BudgetItem[] | null> = ref(null);
+const budgets: Ref<BudgetItem[] | null> = ref(null);
 
 const emits = defineEmits(['deleteItem', 'editItem']);
 
@@ -66,8 +66,8 @@ const selectedTag:Ref<BudgetItem> = ref({} as BudgetItem);
 
 onMounted(() => {
   supabase.auth.getUser().then((user) => {
-    getUserBudget(user.data.user?.id as string).then((tags) => {
-      budgetTags.value = tags;
+    getUserBudget(user.data.user?.id as string).then((_budgets) => {
+      budgets.value = _budgets;
       
     });
   });

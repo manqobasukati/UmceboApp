@@ -7,7 +7,7 @@ export async function getUserBudget(
 ): Promise<BudgetItem[] | any> {
   const date = new Date();
   const { data, error } = await supabase
-    .from('tags')
+    .from('budgets')
     .select('*')
     .eq('user_id', userId)
     // .eq('transaction_type', transactionType)
@@ -23,7 +23,7 @@ export async function getUserBudget(
 }
 
 export async function addBudgetItem(params: BudgetItem) {
-  const { data, error } = await supabase.from('tags').insert([params]).select();
+  const { data, error } = await supabase.from('budgets').insert([params]).select();
 
   if (data) {
     return data;
@@ -33,11 +33,11 @@ export async function addBudgetItem(params: BudgetItem) {
 }
 
 export async function deletBudgetItem(budgetItemId: string) {
-  console.log(budgetItemId)
+  console.log('BudgetId',budgetItemId)
   const { error } = await supabase
-    .from('tags')
+    .from('budgets')
     .delete()
-    .eq('tag_id', budgetItemId);
+    .eq('id', budgetItemId);
 
   if (error) {
     throw error;
@@ -49,17 +49,17 @@ export async function deletBudgetItem(budgetItemId: string) {
 export async function updateBudgetItem(budgetItem: BudgetItem) {
   const budget = { ...budgetItem };
   const { data } = await supabase
-    .from('tags')
+    .from('budgets')
     .update(budget)
-    .eq('tag_id', budget.tag_id);
+    .eq('id', budget.id);
 
-  let { data: tags, error } = await supabase
-    .from('tags')
+  let { data: budgets, error } = await supabase
+    .from('budgets')
     .select('*')
-    .eq('tag_id', budget.tag_id);
+    .eq('id', budget.id);
 
-  if (tags) {
-    return tags[0] as BudgetItem;
+  if (budgets) {
+    return budget[0] as BudgetItem;
   }
 
  

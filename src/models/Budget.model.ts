@@ -8,7 +8,8 @@ export interface BudgetItem {
   transaction_type: TransactionType;
   name:string,
   created_at:Date,
-  tag_id?:string
+  id:string,
+  user:any
 }
 
 

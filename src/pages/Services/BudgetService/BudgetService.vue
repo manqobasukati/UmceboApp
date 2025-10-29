@@ -80,32 +80,40 @@ import BudgetTransactionItem from '@/components/ui/BudgetTransactionItem.vue';
 import useBudgetStore from '@/stores/budget';
 import { BUDGET_ACTIONS } from '@/stores/budget/actions';
 import { BUDGET_GETTERS } from '@/stores/budget/getters';
-import type { BudgetItem } from '@/models/Budget.model';
+import type { BudgetItem, TransactionType } from '@/models/Budget.model';
 
 const pills = ref([
   { ui: 'Income', api: 'in' },
   { ui: 'Expense', api: 'out' },
 ]);
-const activePill = ref({ ui: 'Income', api: 'in' });
+
 
 const budgetStore = useBudgetStore();
+const activePill = ref({ ui: 'Income', api: 'in' });
 
 const activeDialogView = ref('');
 
 const showDialogBox = ref(false);
 
+budgetStore[BUDGET_ACTIONS.SET_ACTIVE_TRANSACTION_TYPE]({ transaction_type: activePill.value.api as TransactionType});
+
+
+
 onMounted(() => {
   budgetStore[BUDGET_ACTIONS.SET_BUDGET_ITEMS]({
-    user_id: '66edd2bd-cad4-4fe2-a29e-ab72e5617b43',
+    user_id: '26dc3e2d-09d3-4081-bf63-2bc36c27cd3e',
     transaction_type: activePill.value.api,
   });
 });
 
-watch(activePill, (newPill, OldPill) => {
+watch(activePill, (newPill:any, OldPill:any) => {
+
   budgetStore[BUDGET_ACTIONS.SET_BUDGET_ITEMS]({
-    user_id: '66edd2bd-cad4-4fe2-a29e-ab72e5617b43',
+    user_id: '26dc3e2d-09d3-4081-bf63-2bc36c27cd3e',
     transaction_type: newPill.api,
   });
+
+  budgetStore[BUDGET_ACTIONS.SET_ACTIVE_TRANSACTION_TYPE]({ transaction_type: newPill.api as TransactionType});
 });
 
 const showAddTransactionDialog = () => {
@@ -134,7 +142,7 @@ const showDialog = (view: string, budgetItem?: BudgetItem) => {
 // });
 
 const totalIncome = computed(() => {
-  return budgetStore.budget_items?.reduce((a, b) => {
+  return budgetStore.budget_items?.reduce((a:number, b:BudgetItem) => {
     if (b.transaction_type === 'in') {
       return a + b.amount_allocation;
     }
@@ -143,7 +151,7 @@ const totalIncome = computed(() => {
 });
 
 const totalExpenses = computed(() => {
-  return budgetStore.budget_items?.reduce((a, b) => {
+  return budgetStore.budget_items?.reduce((a:number, b:BudgetItem) => {
     if (b.transaction_type === 'out') {
       return a + b.amount_allocation;
     }
@@ -155,12 +163,14 @@ function handleAddBudget(value: BudgetItem) {
   console.log('Valuable 1', value);
   budgetStore[BUDGET_ACTIONS.ADD_BUDGET_ITEM]({ budget_item: value }).then(
     () => {
+
       showDialog('');
     }
   );
 }
 
 async function handleEditBudget(value: BudgetItem) {
+  console.log('Update budget', value);
   budgetStore[BUDGET_ACTIONS.UPDATE_BUDGET_ITEM]({
     budget_item: value,
   }).then(() => {
@@ -170,7 +180,7 @@ async function handleEditBudget(value: BudgetItem) {
 
 function handleDeleteBudget(value: BudgetItem) {
   budgetStore[BUDGET_ACTIONS.DELETE_BUDGET_ITEM]({
-    budget_item_id: value.tag_id as string,
+    budget_item_id: value.id as string,
   }).then(() => {
     showDialog('');
   });

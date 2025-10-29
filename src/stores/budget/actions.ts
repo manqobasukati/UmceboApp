@@ -1,4 +1,4 @@
-import type { BudgetItem } from '@/models/Budget.model';
+import type { BudgetItem, TransactionType } from '@/models/Budget.model';
 import {
   addBudgetItem,
   deletBudgetItem,
@@ -14,6 +14,7 @@ export enum BUDGET_ACTIONS {
   'DELETE_BUDGET_ITEM' = 'delete_budget_item',
   'SET_ACTIVE_BUDGET_ITEM' = 'set_active_budget_item',
   'ADD_BUDGET_ITEM' = 'ADD_BUDGET_ITEM',
+  'SET_ACTIVE_TRANSACTION_TYPE' = 'set_active_transaction_type'
 }
 
 const actions = {
@@ -39,7 +40,7 @@ const actions = {
       .then(() => {
         this.budget_items?.splice(
           this.budget_items.findIndex((v: BudgetItem) => {
-            return values.budget_item_id === v.tag_id;
+            return values.budget_item_id === v.id;
           }),
           1
         );
@@ -48,7 +49,12 @@ const actions = {
         console.log(e);
       });
   },
-
+  [BUDGET_ACTIONS.SET_ACTIVE_TRANSACTION_TYPE](
+    this: BudgetState,
+    values: { transaction_type: TransactionType }
+  ) {
+    this.active_transaction_type = values.transaction_type;
+  },
   async [BUDGET_ACTIONS.UPDATE_BUDGET_ITEM](
     this: BudgetState,
     values: { budget_item: BudgetItem }
@@ -56,7 +62,7 @@ const actions = {
     //stor[BUDGET_ACTIONS.SET_BUDGET_ITEMS]({user_id:values.budget_item.});
     return updateBudgetItem(values.budget_item).then((val: BudgetItem) => {
       const itemIndex = this.budget_items?.findIndex((v) => {
-        return v.tag_id === val.tag_id;
+        return v.id === val.id;
       }) as number;
       if (this.budget_items) {
         this.budget_items[itemIndex] = val;
@@ -75,8 +81,8 @@ const actions = {
     this: BudgetState,
     values: { budget_item: BudgetItem }
   ) {
-    return addBudgetItem(values.budget_item).then(() => {
-      this.budget_items?.push(values.budget_item);
+    return addBudgetItem(values.budget_item).then(async() => {
+     await useBudgetStore()[BUDGET_ACTIONS.SET_BUDGET_ITEMS]();
     });
   },
 };
