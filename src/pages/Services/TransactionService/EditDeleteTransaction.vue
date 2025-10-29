@@ -13,9 +13,9 @@
       v-model="internal.amount"
       placeholder="Amount"
     />
-    <select v-model="internal.id" class="p-2 border-2 border-secondary">
+    <select v-model="internal.transaction_id" class="p-2 border-2 border-secondary">
       <option
-        v-for="(tag, key) in budgetTags"
+        v-for="(tag, key) in budgets"
         :key="key"
         :value="tag.id"
       >

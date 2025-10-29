@@ -47,7 +47,7 @@ export async function deletBudgetItem(budgetItemId: string) {
 }
 
 export async function updateBudgetItem(budgetItem: BudgetItem) {
-  const budget = { ...budgetItem };
+  const budget:BudgetItem = { ...budgetItem };
   const { data } = await supabase
     .from('budgets')
     .update(budget)
@@ -59,7 +59,7 @@ export async function updateBudgetItem(budgetItem: BudgetItem) {
     .eq('id', budget.id);
 
   if (budgets) {
-    return budget[0] as BudgetItem;
+    return budgets[0] as BudgetItem;
   }
 
  

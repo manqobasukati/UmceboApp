@@ -79,10 +79,10 @@ const actions = {
   },
   [BUDGET_ACTIONS.ADD_BUDGET_ITEM](
     this: BudgetState,
-    values: { budget_item: BudgetItem }
+    values: {user_id:string, budget_item: BudgetItem }
   ) {
     return addBudgetItem(values.budget_item).then(async() => {
-     await useBudgetStore()[BUDGET_ACTIONS.SET_BUDGET_ITEMS]();
+     await useBudgetStore()[BUDGET_ACTIONS.SET_BUDGET_ITEMS]({user_id:values.user_id, transaction_type: values.budget_item.transaction_type as string});
     });
   },
 };

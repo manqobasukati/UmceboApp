@@ -161,7 +161,7 @@ const totalExpenses = computed(() => {
 
 function handleAddBudget(value: BudgetItem) {
   console.log('Valuable 1', value);
-  budgetStore[BUDGET_ACTIONS.ADD_BUDGET_ITEM]({ budget_item: value }).then(
+  budgetStore[BUDGET_ACTIONS.ADD_BUDGET_ITEM]({user_id:'26dc3e2d-09d3-4081-bf63-2bc36c27cd3e', budget_item: value }).then(
     () => {
 
       showDialog('');
